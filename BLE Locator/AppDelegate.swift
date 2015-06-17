@@ -13,8 +13,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
         
+        // Load previously seen beacons
         BeaconIO.loadBeacons()
         
+        // Request permission to display notifications if not already granted
         if(application.respondsToSelector("registerUserNotificationSettings:")) {
             application.registerUserNotificationSettings(
                 UIUserNotificationSettings(
@@ -28,11 +30,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(application: UIApplication) {
+        // Save previously seen beacons before closing
         BeaconIO.saveBeacons()
+        
+        // Clear notifications
         application.applicationIconBadgeNumber = 0
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
+        // Clear notifications
         application.applicationIconBadgeNumber = 0
     }
 

@@ -11,6 +11,11 @@ class BeaconIO {
     static let fileName = "beacons.json"
     static var seenBeacons = [String: SeenBeacon]();
     
+    /**
+    Load all previously seen beacons from filesystem.
+    
+    **Note:** Must call `loadBeacons()` before `getSeenBeacons()`, `getSeenBeacon()`, and `putSeenBeacon()`.
+    */
     static func loadBeacons() {
         if let dirs : [String] = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true) as? [String] {
             let dir = dirs[0]
@@ -33,6 +38,9 @@ class BeaconIO {
         }
     }
     
+    /**
+    Save all previously seen beacons to filesystem.
+    */
     static func saveBeacons() {
         if let dirs : [String] = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true) as? [String] {
             let dir = dirs[0]
@@ -52,18 +60,41 @@ class BeaconIO {
         }
     }
     
+    /**
+    Get `NSDictionary` of all previously seen beacons.
+    
+    :returns: `NSDictionary` of all previously seen beacons.
+    */
     static func getSeenBeacons() -> [String: SeenBeacon] {
         return seenBeacons
     }
     
+    /**
+    Get `SeenBeacon` corresponding to given `key`.
+    
+    :param: key Key used to lookup a specific `SeenBeacon`.
+    
+    :returns: `SeenBeacon` corresponding to given `key`.
+    */
     static func getSeenBeacon(key: String) -> SeenBeacon {
         return seenBeacons[key]!
     }
     
+    /**
+    Store `SeenBeacon` corresponding to given `key`.
+    
+    :param: key Key used to lookup a given `SeenBeacon`.
+    :param: beacon `SeenBeacon` to store corresponding to given `key`.
+    */
     static func putSeenBeacon(key: String, beacon: SeenBeacon) {
         seenBeacons[key] = beacon
     }
     
+    /**
+    Get `SeenBeacon` corresponding to given `key`.
+    
+    **Note:** Automatically calls `saveBeacons()`.
+    */
     static func reset() {
         seenBeacons.removeAll(keepCapacity: false)
         saveBeacons()

@@ -15,6 +15,9 @@ class BLEDataTracker {
     var beaconCount:Int
     var lastNotifText:String
     
+    /**
+    Creates `BLEDataTracker` instance.
+    */
     init() {
         validBeacons = []
         tracking = false
@@ -22,10 +25,26 @@ class BLEDataTracker {
         lastNotifText = ""
     }
     
+    /**
+    Get an array of all valid `SeenBeacon`.
+    
+    A `SeenBeacon` is valid if:
+    
+    - `ignore` is false
+    
+    :returns: Array of valid `SeenBeacon`.
+    */
     func getValidBeacons() -> [SeenBeacon] {
         return validBeacons
     }
     
+    /**
+    Indicate tracking status. Will call `BeaconIO.saveBeacons()` if `track` is `false`.
+    
+    **Note:** Does not stop `CLLocationManager` tracking, which must be called independently.
+    
+    :param: track Tracking status.
+    */
     func setTracking(track: Bool) {
         tracking = track
         
@@ -34,10 +53,26 @@ class BLEDataTracker {
         }
     }
     
+    /**
+    Get current tracking status.
+    
+    :returns: Tracking status.
+    */
+
     func isTracking() -> Bool {
         return tracking
     }
     
+    /**
+    Process an array of beacons. Processing includes:
+    
+    - Checking if beacon has been seen before
+    - Creating a notification if necessary
+    
+    **Note:** Array must contain `CLBeacon` objects.
+    
+    :param: beacons Array of beacons to process.
+    */
     func registerBeacons(beacons: [AnyObject]) {
         let knownBeacons = beacons.filter{ $0.proximity != CLProximity.Unknown }
         var firstNotifBeacon:String = ""
@@ -84,6 +119,15 @@ class BLEDataTracker {
     }
     
     // MARK: Utility methods
+    
+    /**
+    Get the name of a `SeenBeacon` corresponding to given `key`.
+    Name will default to `btName` if `userName` is undefined.
+    
+    :param: key Key corresponding to desired `SeenBeacon`.
+    
+    :returns: Name of `SeenBeacon` corresponding to given `key`.
+    */
     func getName(key: String) -> String {
         let seenBeacon = BeaconIO.getSeenBeacon(key)
         if seenBeacon.userName.rangeOfString("\u{2063}") == nil {
@@ -93,6 +137,14 @@ class BLEDataTracker {
         return seenBeacon.btName
     }
     
+    /**
+    Send a local notification with given `message`. Only updates if
+    `message` differs from the previous message.
+    
+    **Note:** Clears all other notifications before creating notification.
+    
+    :param: message Message to display in notification.
+    */
     func sendLocalNotificationWithMessage(message: String!) {
         // Only update notification if new
         if lastNotifText != message {
