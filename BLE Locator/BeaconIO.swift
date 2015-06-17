@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class BeaconIO {
     
