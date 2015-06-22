@@ -209,7 +209,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tableView.reloadData()
     }
     
-    // MARK: Utility methods
+    // MARK: Utility Methods
     
     /**
     Get the name of a `SeenBeacon` corresponding to given `index`.
